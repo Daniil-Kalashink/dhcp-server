@@ -1,0 +1,12 @@
+[Unit]
+Description=Simple DHCP Server
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=@CMAKE_INSTALL_PREFIX@/bin/dhcp-server -d /var/lib/dhcp-server
+Restart=on-failure
+User=root
+
+[Install]
+WantedBy=multi-user.target
