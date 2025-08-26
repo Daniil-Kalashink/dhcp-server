@@ -1,0 +1,5 @@
+build
+.vscode
+*.sh
+tests/build_tests
+Testing
