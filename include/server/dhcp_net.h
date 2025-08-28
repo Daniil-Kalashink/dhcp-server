@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/un.h>
+#include "include/server/logger.h"
 
 #define DHCP_NET_ERR -1
 #define DHCP_NET_OK   0
