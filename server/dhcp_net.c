@@ -4,13 +4,13 @@ int dhcp_net_create_sock(int * fd, int domain, int type)
 {
 	*fd = socket(domain, type, 0);
 	if (*fd < 0) {
-		printf("socket: %s", strerror(errno));
+		dhcp_log_error("socket: %s", strerror(errno));
 		return DHCP_NET_ERR;
 	}
 
 	if (IS_ERROR(dhcp_net_set_reuse_addr(*fd))) 
 	{
-		printf("dhcp_net_udp_local_sock");
+		dhcp_log_error("dhcp_net_udp_local_sock");
 		close(*fd);
 		return DHCP_NET_ERR;
 	}
@@ -26,7 +26,7 @@ int dhcp_net_udp_inet_sock(uint32_t addr, uint16_t port, struct sockaddr_in * se
 
 	if (IS_ERROR(dhcp_net_create_sock(&fd, AF_INET, SOCK_DGRAM)))
 	{
-		printf("dhcp_net_udp_local_sock");
+		dhcp_log_error("dhcp_net_udp_local_sock");
 		return DHCP_NET_ERR;
 	}
 
@@ -36,7 +36,7 @@ int dhcp_net_udp_inet_sock(uint32_t addr, uint16_t port, struct sockaddr_in * se
 
 	if (bind(fd, (struct sockaddr*)serv, sizeof(struct sockaddr_in)) < 0)
 	{
-		printf("bind: %s", strerror(errno));
+		dhcp_log_error("bind: %s", strerror(errno));
 		close(fd);
 		return DHCP_NET_ERR;
 	}
@@ -52,7 +52,7 @@ int dhcp_net_udp_local_sock(char * path, struct sockaddr_un * addr)
 
 	if (IS_ERROR(dhcp_net_create_sock(&fd, AF_LOCAL, SOCK_DGRAM)))
 	{
-		printf("dhcp_net_udp_local_sock");
+		dhcp_log_error("dhcp_net_udp_local_sock");
 		return DHCP_NET_ERR;
 	}
 
@@ -67,7 +67,7 @@ int dhcp_net_udp_unix_server(char * path, struct sockaddr_un * addr)
 	int fd = dhcp_net_udp_local_sock(path, addr);
 	if(fd < 0)
 	{
-		printf("dhcp_net_udp_local_sock");
+		dhcp_log_error("dhcp_net_udp_local_sock");
 		return DHCP_NET_ERR;
 	}
 
@@ -75,7 +75,7 @@ int dhcp_net_udp_unix_server(char * path, struct sockaddr_un * addr)
 
 	if (bind(fd, (struct sockaddr*)addr, sizeof(struct sockaddr_un)) == -1)
 	{
-		printf("bind");
+		dhcp_log_error("bind");
 		close(fd);
 		return DHCP_NET_ERR;
 	}
@@ -88,7 +88,7 @@ int dhcp_net_udp_unix_client(char * path, struct sockaddr_un * addr)
 	int fd = dhcp_net_udp_local_sock(path, addr);
 	if(fd < 0)
 	{
-		printf("dhcp_net_udp_local_sock");
+		dhcp_log_error("dhcp_net_udp_local_sock");
 		return DHCP_NET_ERR;
 	}
 
@@ -100,7 +100,7 @@ int dhcp_net_set_reuse_addr(int fd)
 	int optval = 1;
 
 	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
-		printf("setsockopt SO_REUSEADDR: %s", strerror(errno));
+		dhcp_log_error("setsockopt SO_REUSEADDR: %s", strerror(errno));
 		return DHCP_NET_ERR;
 	}
 
