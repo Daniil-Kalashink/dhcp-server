@@ -1,11 +1,15 @@
 #ifndef DHCP_H
 #define DHCP_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <stdbool.h>
+#include <fcntl.h>
 #include "include/server/dhcp_net.h"
+#include "include/server/logger.h"
 
 #define DHCP_PORT_SERVER 67
 #define DHCP_MTU_MAX     1500

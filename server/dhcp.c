@@ -30,8 +30,20 @@ void* server_for_receiving(void* arg) {
 
 int main()
 {
+	int fd;
 	pthread_t thread_serv_resv;
 
+	fd = open("/dev/null", O_RDWR);
+	if (fd == 0)
+		fd = open("/dev/null", O_RDWR);
+	if (fd == 1)
+		fd = open("/dev/null", O_RDWR);
+	if (fd == 2)
+		log_perror = 0; /* No sense logging to /dev/null. */
+	else if (fd != -1)
+		close(fd);
+
+	setup_syslog(LOG_LEVEL_DEBUG, "dhcp-server");
 	printf("[+] Main thread started. Creating DHCP server thread...\n");
 
 	if (pthread_create(&thread_serv_resv, NULL, server_for_receiving, NULL) != 0) {
@@ -40,7 +52,8 @@ int main()
 	}
 
 	pthread_join(thread_serv_resv, NULL);
-	
+	closelog();
+
 	printf("[-] Server thread exited. Shutting down.\n");
 	return EXIT_SUCCESS;
 }
