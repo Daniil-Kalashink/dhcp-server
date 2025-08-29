@@ -3,6 +3,7 @@ project(dhcp-server VERSION 1.0.0 LANGUAGES C)
 
 # Создаем исполняемый файл
 add_executable(dhcp-server 
+server/logger.c
 server/dhcp_net.c
 server/dhcp.c
 )
