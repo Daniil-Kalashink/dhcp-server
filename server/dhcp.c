@@ -1,4 +1,4 @@
-#include "include/server/dhcp.h"
+#include "../include/server/dhcp.h"
 
 void* server_for_receiving(void* arg) {
 

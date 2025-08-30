@@ -4,7 +4,7 @@
 #include <syslog.h>
 #include <stdarg.h> 
 #include <stdio.h>
-#include "include/server/cdefs.h"
+#include "cdefs.h"
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
