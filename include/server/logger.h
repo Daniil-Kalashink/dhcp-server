@@ -30,7 +30,7 @@ typedef enum {
 void setup_syslog(log_level_t level, char * name);
 int dhcp_log_emerg(const char *format, ...);
 int dhcp_log_error(const char *format, ...);
-int dhcp_log_warning(const char *format, ...);
+int dhcp_log_warn(const char *format, ...);
 int dhcp_log_info(const char *format, ...);
 int dhcp_log_debug(const char *format, ...);
 
