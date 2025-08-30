@@ -8,8 +8,8 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <fcntl.h>
-#include "include/server/dhcp_net.h"
-#include "include/server/logger.h"
+#include "dhcp_net.h"
+#include "logger.h"
 
 #define DHCP_PORT_SERVER 67
 #define DHCP_MTU_MAX     1500
