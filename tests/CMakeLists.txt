@@ -20,6 +20,7 @@ target_include_directories(dhcp-server PRIVATE
 )
 
 set(TEST_TARGETS 
+	test_dhcp_net
 )
 
 foreach(test_target IN LISTS TEST_TARGETS)
