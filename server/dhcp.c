@@ -31,6 +31,13 @@ int main()
 		close(fd);
 
 	setup_syslog(LOG_LEVEL_DEBUG, "dhcp-server");
+	
+	if (dhcp_net_get_mac_address("eth0", mac))
+	{
+		dhcp_log_emerg("Couldn't find a MAC address for this interface.");
+		return EXIT_SUCCESS;
+	}
+
 	dhcp_log_info("[+] Main thread started. Creating DHCP server thread...\n");
 
 	if (pthread_create(&thread_serv_resv, NULL, server_for_receiving, NULL) != 0) {

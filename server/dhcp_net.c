@@ -105,6 +105,45 @@ int dhcp_net_set_opt(int fd, int level, int optname)
 	return DHCP_NET_OK;
 }
 
+int dhcp_net_get_mac_address(const char *interface_name, uint8_t *inter_mac)
+{
+	int fd;
+	struct ifreq ifr;
+
+	// Проверка входных параметров
+	if (interface_name == NULL || inter_mac == NULL) {
+		dhcp_log_error("Invalid parameters");
+		return DHCP_NET_ERR;
+	}
+
+	// Создаем сокет
+	fd = socket(AF_INET, SOCK_DGRAM, 0);
+	if (fd < 0) {
+		dhcp_log_error("socket creation failed");
+		return DHCP_NET_ERR;
+	}
+
+	// Инициализируем структуру ifreq
+	memset(&ifr, 0, sizeof(ifr));
+
+	// Устанавливаем имя интерфейса
+	strncpy(ifr.ifr_name, interface_name, IFNAMSIZ - 1);
+	ifr.ifr_name[IFNAMSIZ - 1] = '\0'; // Гарантируем null-termination
+
+	// Получаем MAC-адрес
+	if (ioctl(fd, SIOCGIFHWADDR, &ifr) < 0) {
+		dhcp_log_error("ioctl SIOCGIFHWADDR failed");
+		close(fd);
+		return DHCP_NET_ERR;
+	}
+
+	// Копируем MAC-адрес в выходной буфер
+	memcpy(inter_mac, ifr.ifr_hwaddr.sa_data, 6);
+
+	close(fd);
+	return DHCP_NET_OK;
+}
+
 int dhcp_net_raw_inet_sock(int * fd, struct sockaddr_ll * dest_addr, char * interface, int8_t * target_mac)
 {	
 	if (dest_addr == NULL)

@@ -14,6 +14,7 @@ int dhcp_net_set_opt(int fd, int level, int optname);
 int dhcp_net_udp_local_sock(char * path, struct sockaddr_un * addr);
 int dhcp_net_udp_unix_server(char * path, struct sockaddr_un * addr);
 int dhcp_net_udp_unix_client(char * path, struct sockaddr_un * addr);
+int dhcp_net_get_mac_address(const char * interface_name, uint8_t *inter_mac);
 int dhcp_net_raw_inet_sock(int * fd, struct sockaddr_ll * dest_addr, char * interface, int8_t * target_mac);
 
 #endif /* DHCP_NET_H */
