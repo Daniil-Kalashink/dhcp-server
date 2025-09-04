@@ -1,14 +1,14 @@
 #include "../include/dhcp_net.h"
 
-int dhcp_net_create_sock(int * fd, int domain, int type)
+int dhcp_net_create_sock(int * fd, int domain, int type, int proto, bool val_set_opt, int level, int optname)
 {
-	*fd = socket(domain, type, 0);
+	*fd = socket(domain, type, proto);
 	if (*fd < 0) {
 		dhcp_log_error("socket: %s", strerror(errno));
 		return DHCP_NET_ERR;
 	}
 
-	if (IS_ERROR(dhcp_net_set_reuse_addr(*fd))) 
+	if (val_set_opt && (IS_ERROR(dhcp_net_set_opt(*fd, level, optname))))
 	{
 		dhcp_log_error("dhcp_net_udp_local_sock");
 		close(*fd);
@@ -21,10 +21,9 @@ int dhcp_net_create_sock(int * fd, int domain, int type)
 int dhcp_net_udp_inet_sock(uint32_t addr, uint16_t port, struct sockaddr_in * serv)
 {
 	int fd;
-
 	memset(serv, 0, sizeof(struct sockaddr_in));
 
-	if (IS_ERROR(dhcp_net_create_sock(&fd, AF_INET, SOCK_DGRAM)))
+	if (IS_ERROR(dhcp_net_create_sock(&fd, AF_INET, SOCK_DGRAM, IPPROTO_UDP, true, SOL_SOCKET, SO_REUSEADDR)))
 	{
 		dhcp_log_error("dhcp_net_udp_local_sock");
 		return DHCP_NET_ERR;
@@ -47,10 +46,9 @@ int dhcp_net_udp_inet_sock(uint32_t addr, uint16_t port, struct sockaddr_in * se
 int dhcp_net_udp_local_sock(char * path, struct sockaddr_un * addr)
 {
 	int fd;
-
 	memset(addr, 0, sizeof(struct sockaddr_un));
 
-	if (IS_ERROR(dhcp_net_create_sock(&fd, AF_LOCAL, SOCK_DGRAM)))
+	if (IS_ERROR(dhcp_net_create_sock(&fd, AF_INET, SOCK_DGRAM, IPPROTO_UDP, true, SOL_SOCKET, SO_REUSEADDR)))
 	{
 		dhcp_log_error("dhcp_net_udp_local_sock");
 		return DHCP_NET_ERR;
@@ -95,11 +93,11 @@ int dhcp_net_udp_unix_client(char * path, struct sockaddr_un * addr)
 	return fd;
 }
 
-int dhcp_net_set_reuse_addr(int fd)
+int dhcp_net_set_opt(int fd, int level, int optname)
 {
 	int optval = 1;
 
-	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1) {
+	if (setsockopt(fd, level, optname, &optval, sizeof(optval)) == -1) {
 		dhcp_log_error("setsockopt SO_REUSEADDR: %s", strerror(errno));
 		return DHCP_NET_ERR;
 	}
