@@ -48,4 +48,6 @@ typedef struct {
 	uint8_t options[DHCP_MAX_OPTION_LEN]; // DHCP options
 } dhcp_packet;
 #pragma pack(pop)
+
+int server_for_receiving(int8_t * mac);
 #endif /* DHCP_H */

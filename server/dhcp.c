@@ -1,6 +1,5 @@
 #include "../include/dhcp.h"
-	{
-		dhcp_log_error("[ERROR] dhcp_net_udp_local_sock\n");
+int server_for_receiving(int8_t * mac)
 		goto err;
 	}
 
@@ -40,12 +39,11 @@ int main()
 
 	dhcp_log_info("[+] Main thread started. Creating DHCP server thread...\n");
 
-	if (pthread_create(&thread_serv_resv, NULL, server_for_receiving, NULL) != 0) {
-		perror("[-] Failed to create thread");
+	if (server_for_receiving(mac) != 0) {
+		dhcp_log_emerg("Failed to create thread");
 		return EXIT_FAILURE;
 	}
 
-	pthread_join(thread_serv_resv, NULL);
 	closelog();
 
 	dhcp_log_info("[-] Server thread exited. Shutting down.\n");
