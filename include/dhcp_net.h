@@ -1,16 +1,7 @@
 #ifndef DHCP_NET_H
 #define DHCP_NET_H
 
-#include <stdio.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/un.h>
-#include "logger.h"
+#include "dhcp_common.h"
 
 #define DHCP_NET_ERR -1
 #define DHCP_NET_OK   0

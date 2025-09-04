@@ -1,13 +1,12 @@
 #ifndef DHCP_H
 #define DHCP_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <fcntl.h>
+#include "dhcp_common.h"
+
+#include "netinet/eth.h"
+#include "netinet/ipv4.h"
+#include "netinet/udp.h"
+
 #include "dhcp_net.h"
 #include "logger.h"
 
