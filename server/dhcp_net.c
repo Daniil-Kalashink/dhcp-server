@@ -104,3 +104,37 @@ int dhcp_net_set_opt(int fd, int level, int optname)
 
 	return DHCP_NET_OK;
 }
+
+int dhcp_net_raw_inet_sock(int * fd, struct sockaddr_ll * dest_addr, char * interface, int8_t * target_mac)
+{	
+	if (dest_addr == NULL)
+		return DHCP_NET_ERR;
+
+	if (IS_ERROR(dhcp_net_create_sock(fd, AF_PACKET, SOCK_RAW, htons(ETH_P_ALL), false, 0, 0)))
+	{
+		dhcp_log_error("dhcp_net_udp_local_sock");
+		return DHCP_NET_ERR;
+	}
+	struct ifreq ifr;
+	strncpy(ifr.ifr_name, interface, IFNAMSIZ);
+	if (ioctl(*fd, SIOCGIFINDEX, &ifr) < 0) {
+		perror("ioctl SIOCGIFINDEX");
+		close(*fd);
+		return DHCP_NET_ERR;
+	}
+
+	memset(dest_addr, 0, sizeof(struct sockaddr_ll));
+	dest_addr->sll_family = AF_PACKET;
+	dest_addr->sll_protocol = htons(ETH_P_ALL);
+	dest_addr->sll_ifindex = ifr.ifr_ifindex;
+	dest_addr->sll_halen = ETH_ALEN;
+	memcpy(dest_addr->sll_addr, target_mac, ETH_ALEN);
+
+	if (bind(*fd, (struct sockaddr *)dest_addr, sizeof(*dest_addr)) < 0) {
+		dhcp_log_error("Error binding to the interface");
+		close(*fd);
+		return DHCP_NET_ERR;
+	}
+
+	return DHCP_NET_OK;
+}
