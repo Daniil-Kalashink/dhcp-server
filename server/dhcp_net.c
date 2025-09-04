@@ -1,4 +1,4 @@
-#include "../include/server/dhcp_net.h"
+#include "../include/dhcp_net.h"
 
 int dhcp_net_create_sock(int * fd, int domain, int type)
 {

@@ -1,17 +1,4 @@
-#include "../include/server/dhcp.h"
-
-void* server_for_receiving(void* arg) {
-
-	int recv_fd;
-	char buffer[DHCP_MTU_MAX];
-	struct sockaddr_in serv_addr;
-	struct sockaddr_in client_addr;
-	socklen_t client_len = sizeof(client_addr);
-
-	memset(buffer, 0, sizeof(buffer));
-
-	recv_fd = dhcp_net_udp_inet_sock(INADDR_ANY, DHCP_PORT_SERVER, &serv_addr);
-	if (recv_fd < 0)
+#include "../include/dhcp.h"
 	{
 		dhcp_log_error("[ERROR] dhcp_net_udp_local_sock\n");
 		goto err;
