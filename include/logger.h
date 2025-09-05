@@ -1,14 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <syslog.h>
-#include <stdarg.h> 
-#include <stdio.h>
-#include "cdefs.h"
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
-#include <errno.h>
+#include "dhcp_common.h"
 
 extern int log_perror;
 

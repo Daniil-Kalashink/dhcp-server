@@ -1,4 +1,4 @@
-#include "../include/server/logger.h"
+#include "../include/logger.h"
 
 #ifdef DEBUG
 	int log_perror = 1;

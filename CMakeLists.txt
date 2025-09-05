@@ -6,6 +6,10 @@ add_executable(dhcp-server
 server/logger.c
 server/dhcp_net.c
 server/dhcp.c
+
+netinet/eth.c
+netinet/ipv4.c
+netinet/udp.c
 )
 
 # Добавляем пути для include файлов конкретно для этого target

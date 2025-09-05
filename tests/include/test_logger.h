@@ -2,7 +2,7 @@
 #define TEST_LOGGER_H
 
 #include "include/wrap.h"
-#include "../include/server/logger.h"
+#include "../include/logger.h"
 
 extern int dhcp_log_emerg(const char *format, ...);
 extern int dhcp_log_error(const char *format, ...);
