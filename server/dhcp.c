@@ -1,10 +1,21 @@
 #include "../include/dhcp.h"
 int server_for_receiving(int8_t * mac)
-		goto err;
+{
+	int fd;
+	char buf[DHCP_MAX_SIZE_SOCK];
+	struct sockaddr_ll dest_addr;
+	socklen_t dest_len = sizeof(dest_addr);
+
+
+	if (dhcp_net_raw_inet_sock(&fd, &dest_addr, "eth0", mac) < 0)
+	{
+		dhcp_log_error("dhcp_net_udp_local_sock failed");
+		return -1;
 	}
 
 	while (1) {
-		if (recvfrom(recv_fd, buffer, sizeof(buffer), 0, (struct sockaddr*)&client_addr, &client_len) < 0) {
+		memset(buf, 0, sizeof(buf));
+		if (recvfrom(fd, buf, sizeof(buf), 0, (struct sockaddr*)&dest_addr, &dest_len) < 0) {
 			dhcp_log_error("recvfrom failed");
 			continue;
 		}
