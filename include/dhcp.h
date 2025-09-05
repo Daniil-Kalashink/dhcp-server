@@ -1,3 +1,37 @@
+/* dhcp.h
+ * Modified DHCP packet structure for educational project
+ */
+
+/*
+ * Copyright (C) 2004-2022 Internet Systems Consortium, Inc. ("ISC")
+ * Copyright (c) 1995-2003 by Internet Software Consortium
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL ISC BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+ * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *
+ *   Internet Systems Consortium, Inc.
+ *   PO Box 360
+ *   Newmarket, NH 03857 USA
+ *   <info@isc.org>
+ *   https://www.isc.org/
+ */
+
+/* Modifications for educational project:
+ * - Added pragma package for tight packing of dhcp_packet structure.
+ *
+ * Modifications Copyright (C) 2025 Daniil Kalashnik
+ * This modified work is also subject to the terms of the MPL-2.0 license.
+ */
+
 #ifndef DHCP_H
 #define DHCP_H
 
