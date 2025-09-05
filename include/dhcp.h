@@ -8,11 +8,16 @@
 #include "netinet/udp.h"
 
 #include "dhcp_net.h"
-#include "logger.h"
+
+#define BROADCAST_FLAG(flag) flag & 0x8000
 
 #define DHCP_PORT_SERVER 67
+#define DHCP_PORT_CLIENT 68
 #define DHCP_MTU_MAX     1500
 #define DHCP_MTU_MIN     576
+#define DHCP_TTL         128
+#define DHCP_IP          "172.20.0.4"
+
 /* IP header + UDP header */
 #define DHCP_UDP_OVERHEAD     (20 + 8)
 #define DHCP_ETH_FRAME        14
@@ -29,6 +34,17 @@
 
 /* MAX MTU+ Ethernet frame + FSC */
 #define DHCP_MAX_SIZE_SOCK (DHCP_ETH_FRAME+DHCP_MTU_MAX)
+
+#define IP_BROADCAST 0xffffffff
+
+#define dhcp_init_eth_header(eth, src_mac, dst_mac)\
+	init_eth_header(eth, src_mac, dst_mac, ETHERTYPE_IP)\
+
+#define dhcp_init_ipv4_header(ip, src_ip, dst_ip, len)\
+	init_ipv4_header(ip, rand()%65536, 0, IPPROTO_UDP, len, src_ip, dst_ip, 5, 4, 0, DHCP_TTL)\
+
+#define dhcp_init_udp_header(udp, len, src_port, dst_port)\
+	init_udp_header(udp, len, 0, src_port, dst_port)\
 #pragma pack(push, 1)
 typedef struct {
 	uint8_t op;                           // Operation code
@@ -58,5 +74,6 @@ typedef struct
 } dhcp_parse_packet;
 
 int server_for_receiving(int8_t * mac);
+int dhcp_preprocessing(dhcp_parse_packet * packet, int8_t * mac);
 int capture_dhcp_traffic(char *buffer, dhcp_parse_packet *packet);
 #endif /* DHCP_H */

@@ -49,6 +49,57 @@ int capture_dhcp_traffic(char *buffer, dhcp_parse_packet *packet)
 
 	return 0;
 }
+
+int dhcp_preprocessing(dhcp_parse_packet * packet, int8_t * mac)
+{
+	dhcp_packet * dhcp = &packet->dhcp;
+
+	const char *ip_str = DHCP_IP;
+	struct in_addr src_addr;
+		
+	if (inet_aton(ip_str, &src_addr) == 0) {
+		dhcp_log_error("IP address transformation error\n");
+		return -1;
+	}
+
+	if (dhcp->giaddr.s_addr != 0)
+	{
+		dhcp_log_error("giaddr");
+		return -2; // There will be a code with here later BOOTP
+	}
+
+	if (dhcp->ciaddr.s_addr != 0)
+	{
+		dhcp_log_error("ciaddr");
+		return 0;
+	}
+
+	if (BROADCAST_FLAG(dhcp->flags) != 0)
+	{
+		dhcp_log_error("BROADCAST_FLAG");
+		return 0;
+	}
+	else
+	{
+		int8_t src_mac[6];
+		memcpy(src_mac, dhcp->chaddr, 6);
+		
+		dhcp_init_eth_header(&packet->eth, mac, src_mac);
+		switch (packet->ip.version)
+		{
+			case IP_VERSION_4:
+				dhcp_init_ipv4_header(&packet->ip, &(src_addr), &(dhcp->yiaddr), 0);
+				break;
+			default:
+				break;
+		}
+		dhcp_init_udp_header(&packet->udp, 0 ,DHCP_PORT_SERVER, DHCP_PORT_CLIENT);
+
+		return 0;
+	}
+
+	return -1;
+}
 int server_for_receiving(int8_t * mac)
 {
 	int fd;
@@ -74,12 +125,18 @@ int server_for_receiving(int8_t * mac)
 
 		if(capture_dhcp_traffic(buf, &packet))
 			continue;
+
+		if(dhcp_preprocessing(&packet, mac))
+			continue;
 }
 
 int main()
 {
 	int fd;
 	pthread_t thread_serv_resv;
+	int8_t mac[6];
+
+	srand(time(NULL));
 
 	fd = open("/dev/null", O_RDWR);
 	if (fd == 0)
