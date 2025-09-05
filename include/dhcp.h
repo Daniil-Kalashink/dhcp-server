@@ -49,5 +49,14 @@ typedef struct {
 } dhcp_packet;
 #pragma pack(pop)
 
+typedef struct
+{
+	eth_header  eth;
+	ip_header   ip;
+	udp_header  udp;
+	dhcp_packet dhcp;
+} dhcp_parse_packet;
+
 int server_for_receiving(int8_t * mac);
+int capture_dhcp_traffic(char *buffer, dhcp_parse_packet *packet);
 #endif /* DHCP_H */
